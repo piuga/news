@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="piuga_news_items" resource="default" engine="innodb" comment="News Items">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="News Item ID"/>
+        <column xsi:type="varchar" name="url_key" nullable="false" default="" length="255" comment="URL Key"/>
+        <column xsi:type="varchar" name="title" nullable="false" default="" length="255" comment="Title"/>
+        <column xsi:type="mediumtext" name="content" nullable="true" comment="Content"/>
+        <column xsi:type="mediumtext" name="short_content" nullable="true" comment="Short Content"/>
+        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Image"/>
+        <column xsi:type="timestamp" name="publish_at" on_update="false" nullable="false" comment="Publish Time"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created Time"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Modification Time"/>
+        <column xsi:type="varchar" name="stores" nullable="false" default="0" length="255" comment="Display on Stores"/>
+        <column xsi:type="smallint" name="status" padding="6" unsigned="false" nullable="false" identity="false"
+                default="1" comment="Status"/>
+        <column xsi:type="varchar" name="author" nullable="false" default="" length="255" comment="Author"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta Description"/>
+        <column xsi:type="text" name="meta_keywords" nullable="true" comment="Meta Keywords"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="PIUGA_NEWS_ITEMS_URL_KEY" indexType="btree">
+            <column name="url_key"/>
+        </index>
+    </table>
+</schema>
