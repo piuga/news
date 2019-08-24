@@ -3,4 +3,12 @@
     <preference for="Piuga\News\Api\NewsRepositoryInterface" type="Piuga\News\Model\NewsRepository"/>
     <preference for="Piuga\News\Api\Data\NewsInterface" type="Piuga\News\Model\News"/>
     <preference for="Piuga\News\Api\Data\NewsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="getNewsItem" xsi:type="object">Piuga\News\Console\Command\GetNewsItem</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
