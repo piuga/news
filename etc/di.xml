@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Piuga\News\Api\NewsRepositoryInterface" type="Piuga\News\Model\NewsRepository"/>
+    <preference for="Piuga\News\Api\Data\NewsInterface" type="Piuga\News\Model\News"/>
+    <preference for="Piuga\News\Api\Data\NewsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+</config>

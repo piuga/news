@@ -30,7 +30,7 @@ class AddSampleNews implements DataPatchInterface, PatchRevertableInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function apply()
     {
@@ -133,7 +133,7 @@ class AddSampleNews implements DataPatchInterface, PatchRevertableInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function revert()
     {
