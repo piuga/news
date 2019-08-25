@@ -9,6 +9,7 @@
             <argument name="commands" xsi:type="array">
                 <item name="getNewsItem" xsi:type="object">Piuga\News\Console\Command\GetNewsItem</item>
                 <item name="addNewsItem" xsi:type="object">Piuga\News\Console\Command\AddNewsItem</item>
+                <item name="newsItemStatus" xsi:type="object">Piuga\News\Console\Command\NewsItemStatus</item>
             </argument>
         </arguments>
     </type>
