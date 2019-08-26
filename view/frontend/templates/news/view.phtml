@@ -1,0 +1,29 @@
+<?php
+/** @var \Magento\Framework\View\Element\AbstractBlock $block */
+/** @var \Piuga\News\ViewModel\NewsView $viewModel */
+$viewModel = $block->getViewModel();
+$news = $viewModel->getNewsItem();
+?>
+<div class="news-view" itemscope itemtype="http://schema.org/Article">
+    <div class="no-display" itemprop="name"><?= $news->getTitle() ?></div>
+    <?php if ($news->getImage()): ?>
+        <div class="news-image">
+            <span itemprop="image">
+                <img src="<?= $news->getImage() ?>" alt="<?= $news->getTitle() ?>" title="<?= $news->getTitle() ?>"/>
+            </span>
+        </div>
+    <?php endif; ?>
+    <div class="news-content" itemprop="articleBody">
+        <?= $news->getContent() ?>
+    </div>
+    <div class="author-date">
+        <span class="author">
+            <?= __('by') ?>
+            <span itemprop="author"><?= $news->getAuthor() ?></span>
+        </span>
+        <span class="date">
+            <?= __('published at') ?>
+            <span itemprop="datePublished"><?= $viewModel->getPublishDate($news) ?></span>
+        </span>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<?php /** @var \Piuga\News\Block\ItemsList $block */ ?>
+<div class="news-items">
+    <?php $news = $block->getNewsItems(); ?>
+    <?php if ($news && count($news)) : ?>
+        <div class="toolbar top">
+            <?= $block->getPagerHtml() ?>
+        </div>
+        <ul>
+            <?php foreach ($news as $item) : ?>
+                <li itemscope itemtype="http://schema.org/Article">
+                    <div class="item-content">
+                        <a class="item-title" href="<?= $block->getItemUrl($item) ?>">
+                            <h2 itemprop="name"><?= $item->getTitle() ?></h2>
+                        </a>
+                        <div class="author-date">
+                            <span class="author">
+                                <?= __('by') ?>
+                                <span itemprop="author"><?= $item->getAuthor() ?></span>
+                            </span>
+                            <span class="date">
+                                <?= __('published at') ?>
+                                <span itemprop="datePublished"><?= $block->getPublishDate($item) ?></span>
+                            </span>
+                        </div>
+                        <div class="news-list-content" itemprop="description">
+                            <?= $item->getShortContent() ?>
+                        </div>
+                    </div>
+                    <?php if ($item->getImage()): ?>
+                        <div class="item-image">
+                            <a class="item-image" href="<?= $block->getItemUrl($item) ?>">
+                                <span itemprop="thumbnailUrl">
+                                    <img src="<?= $item->getImage() ?>" alt="<?= $item->getTitle() ?>" title="<?= $item->getTitle() ?>"/>
+                                </span>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="toolbar-bottom">
+            <div class="toolbar bottom">
+                <?= $block->getPagerHtml() ?>
+            </div>
+        </div>
+    <?php else : ?>
+        <p><?= __('There are no news!') ?></p>
+    <?php endif; ?>
+</div>
