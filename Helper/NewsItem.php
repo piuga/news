@@ -90,7 +90,7 @@ class NewsItem extends AbstractHelper
      */
     public function getItemUrl(NewsInterface $news) : string
     {
-        return $this->_getUrl('news/item/view', ['id' => $news->getId()]);
+        return $this->_getUrl('news/' . $news->getUrlKey());
     }
 
     /**
