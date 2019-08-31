@@ -1,4 +1,9 @@
 <?php /** @var \Piuga\News\Block\ItemsList $block */ ?>
+<?php if ($description = $block->getDescription()): ?>
+    <div class="block description">
+        <?= $description ?>
+    </div>
+<?php endif; ?>
 <div class="news-items">
     <?php $news = $block->getNewsItems(); ?>
     <?php if ($news && count($news)) : ?>

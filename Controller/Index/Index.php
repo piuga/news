@@ -6,7 +6,9 @@ namespace Piuga\News\Controller\Index;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Controller\Result\ForwardFactory;
 use Magento\Framework\View\Result\PageFactory;
+use Piuga\News\Helper\NewsItem;
 
 /**
  * Class Index
@@ -20,16 +22,32 @@ class Index extends Action
     protected $resultPageFactory;
 
     /**
+     * @var ForwardFactory
+     */
+    protected $resultForwardFactory;
+
+    /**
+     * @var NewsItem
+     */
+    protected $newsHelper;
+
+    /**
      * Index constructor.
      * @param Context $context
      * @param PageFactory $resultPageFactory
+     * @param ForwardFactory $resultForwardFactory
+     * @param NewsItem $newsHelper
      */
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        ForwardFactory $resultForwardFactory,
+        NewsItem $newsHelper
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
+        $this->resultForwardFactory = $resultForwardFactory;
+        $this->newsHelper = $newsHelper;
     }
 
     /**
@@ -39,13 +57,21 @@ class Index extends Action
      */
     public function execute() : ResultInterface
     {
+        // If module is disabled, then redirect to 404 page
+        if (!$this->newsHelper->isActive()) {
+            $resultForward = $this->resultForwardFactory->create();
+            $resultForward->forward('noroute');
+
+            return $resultForward;
+        }
+
         $resultPage = $this->resultPageFactory->create();
 
-        $resultPage->getConfig()->getTitle()->set(__('News'));
+        $resultPage->getConfig()->getTitle()->set($this->newsHelper->getListTitle());
         /** Set metadata */
-        $resultPage->getConfig()->setMetaTitle(__('News'));
-        $resultPage->getConfig()->setDescription(__('Fresh dummy news'));
-        $resultPage->getConfig()->setKeywords(__('news, fresh news, informations'));
+        $resultPage->getConfig()->setMetaTitle($this->newsHelper->getMetaTitle());
+        $resultPage->getConfig()->setDescription($this->newsHelper->getMetaDescription());
+        $resultPage->getConfig()->setKeywords($this->newsHelper->getMetaKeywords());
 
         /** @var \Magento\Theme\Block\Html\Breadcrumbs $breadcrumbsBlock */
         $breadcrumbsBlock = $resultPage->getLayout()->getBlock('breadcrumbs');
@@ -61,8 +87,8 @@ class Index extends Action
             $breadcrumbsBlock->addCrumb(
                 'news',
                 [
-                    'label'    => __('News'),
-                    'title'    => __('News')
+                    'label'    => $this->newsHelper->getListTitle(),
+                    'title'    => $this->newsHelper->getListTitle()
                 ]
             );
         }

@@ -17,6 +17,7 @@ use Magento\Framework\Url;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Piuga\News\Api\NewsRepositoryInterface;
+use Piuga\News\Helper\NewsItem;
 
 /**
  * Class Router
@@ -72,6 +73,11 @@ class Router implements RouterInterface
     protected $response;
 
     /**
+     * @var NewsItem
+     */
+    protected $newsHelper;
+
+    /**
      * Router constructor.
      * @param ActionFactory $actionFactory
      * @param ManagerInterface $eventManager
@@ -81,6 +87,7 @@ class Router implements RouterInterface
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param StoreManagerInterface $storeManager
      * @param ResponseInterface $response
+     * @param NewsItem $newsHelper
      */
     public function __construct(
         ActionFactory $actionFactory,
@@ -90,7 +97,8 @@ class Router implements RouterInterface
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
         StoreManagerInterface $storeManager,
-        ResponseInterface $response
+        ResponseInterface $response,
+        NewsItem $newsHelper
     ) {
         $this->actionFactory = $actionFactory;
         $this->eventManager = $eventManager;
@@ -100,6 +108,7 @@ class Router implements RouterInterface
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->storeManager = $storeManager;
         $this->response = $response;
+        $this->newsHelper = $newsHelper;
     }
 
     /**
@@ -134,59 +143,66 @@ class Router implements RouterInterface
 
         $identifierParts = explode('/', $identifier);
 
-        // Check if 'news' is the first identifier part and there is a 2nd part for news item URL key
-        if (
-            !is_array($identifierParts) ||
-            count($identifierParts) < 2 ||
-            $identifierParts[0] !== self::ROUTER_FRONT_NAME
-        ) {
+        /** Check if URL is for a news page (list or detail) */
+        $urlPrefix = $this->newsHelper->getNewsUrl();
+        if(!is_array($identifierParts) || $identifierParts[0] !== $urlPrefix) {
             // Not a news detail page request, continue
             return null;
         }
 
-        // Get news item URL key as the 2nd identifier part
-        $newsUrlKey = $identifierParts[1];
-        // Get current store ID and prepare stores array for filter
-        $currentStoreId = $this->storeManager->getStore()->getId();
-        $stores = [Store::DEFAULT_STORE_ID, $currentStoreId];
+        // For a 2nd identifier part prepare the detail page
+        if (count($identifierParts) > 1) {
+            // Get news item URL key as the 2nd identifier part
+            $newsUrlKey = $identifierParts[1];
+            // Get current store ID and prepare stores array for filter
+            $currentStoreId = $this->storeManager->getStore()->getId();
+            $stores = [Store::DEFAULT_STORE_ID, $currentStoreId];
 
-        // Prepare filters
-        $filters = [
-            // Active status filter
-            $this->filterBuilder->setConditionType('eq')->setField('status')->setValue(1)->create(),
-            // Publish date filter - publish date is older or equal to today
-            $this->filterBuilder->setConditionType('lteq')->setField('publish_at')->setValue(date('Y-m-d H:i:s'))->create(),
-            // News stores contains admin (0) or current store ID
-            $this->filterBuilder->setConditionType('in')->setField('stores')->setValue($stores)->create(),
-            // URL key filter
-            $this->filterBuilder->setConditionType('eq')->setField('url_key')->setValue($newsUrlKey)->create()
-        ];
-        // Group filters for AND statement
-        $filterGroups = [];
-        foreach ($filters as $filter) {
-            $filterGroups[] = $this->filterGroupBuilder->setFilters([$filter])->create();
-        }
-        // Apply filters
-        $this->searchCriteriaBuilder->setFilterGroups($filterGroups);
-        $news = $this->newsRepository
-            ->getList($this->searchCriteriaBuilder->create())
-            ->getItems();
-        if (!$news || !count($news)) {
-            return null;
-        }
+            // Prepare filters
+            $filters = [
+                // Active status filter
+                $this->filterBuilder->setConditionType('eq')->setField('status')->setValue(1)->create(),
+                // Publish date filter - publish date is older or equal to today
+                $this->filterBuilder->setConditionType('lteq')->setField('publish_at')->setValue(date('Y-m-d H:i:s'))->create(),
+                // News stores contains admin (0) or current store ID
+                $this->filterBuilder->setConditionType('in')->setField('stores')->setValue($stores)->create(),
+                // URL key filter
+                $this->filterBuilder->setConditionType('eq')->setField('url_key')->setValue($newsUrlKey)->create()
+            ];
+            // Group filters for AND statement
+            $filterGroups = [];
+            foreach ($filters as $filter) {
+                $filterGroups[] = $this->filterGroupBuilder->setFilters([$filter])->create();
+            }
+            // Apply filters
+            $this->searchCriteriaBuilder->setFilterGroups($filterGroups);
+            $news = $this->newsRepository
+                ->getList($this->searchCriteriaBuilder->create())
+                ->getItems();
+            if (!$news || !count($news)) {
+                return null;
+            }
 
-        // Get first array entry - should be only one, but it might be also multiple items
-        $newsItem = array_shift($news);
-        if (!$newsItem || !$newsItem->getId()) {
-            return null;
-        }
+            // Get first array entry - should be only one, but it might be also multiple items
+            $newsItem = array_shift($news);
+            if (!$newsItem || !$newsItem->getId()) {
+                return null;
+            }
 
-        // Prepare request
-        $request->setModuleName(self::ROUTER_FRONT_NAME)
-            ->setControllerName('item')
-            ->setActionName('view')
-            ->setParam('id', $newsItem->getId());
-        $request->setAlias(Url::REWRITE_REQUEST_PATH_ALIAS, $identifier);
+            // Prepare request
+            $request->setModuleName(self::ROUTER_FRONT_NAME)
+                ->setControllerName('item')
+                ->setActionName('view')
+                ->setParam('id', $newsItem->getId());
+            $request->setAlias(Url::REWRITE_REQUEST_PATH_ALIAS, $identifier);
+
+        } else {
+            // Forward to news list
+            $request->setModuleName(self::ROUTER_FRONT_NAME)
+                ->setControllerName('index')
+                ->setActionName('index');
+            $request->setAlias(Url::REWRITE_REQUEST_PATH_ALIAS, $identifier);
+        }
 
         return $this->actionFactory->create(Forward::class);
     }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Piuga\News\Block;
 
-use Magento\Framework\Api\SortOrder;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Theme\Block\Html\Pager;
@@ -74,7 +73,7 @@ class ItemsList extends Template
                 ->addFieldToFilter('status', ['eq' => 1])
                 ->addFieldToFilter('publish_at', ['lteq' => date('Y-m-d H:i:s')])
                 ->addFieldToFilter('stores', ['in' => $stores])
-                ->setOrder('publish_at', SortOrder::SORT_DESC);
+                ->setOrder($this->newsHelper->getSortBy(), $this->newsHelper->getSortByDirection());
         }
 
         return $news;
@@ -97,7 +96,7 @@ class ItemsList extends Template
                     'piuga.news.list.pager'
                 )
                 ->setShowAmounts(true)
-                ->setAvailableLimit([3 => 3, 5 => 5, 9 => 9, 12 => 12])
+                ->setAvailableLimit($this->newsHelper->getAvailableLimit())
                 ->setCollection($this->getNewsItems());
             $this->setChild('pager', $pager);
             $this->getNewsItems()->load();
@@ -136,5 +135,16 @@ class ItemsList extends Template
     public function getPublishDate(NewsInterface $news) : string
     {
         return $this->newsHelper->getPublishDate($news);
+    }
+
+    /**
+     * Get list description from configurations
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getDescription() : string
+    {
+        return $this->newsHelper->getListDescription();
     }
 }

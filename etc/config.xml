@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <piuga_news>
+            <general>
+                <active>1</active>
+                <title>News</title>
+                <url_key>news</url_key>
+                <description><![CDATA[<p>Latest news related to our products!</p>]]></description>
+                <allowed_items>3,5,9,12</allowed_items>
+                <sort_by>publish_at</sort_by>
+                <sort_by_direction>DESC</sort_by_direction>
+            </general>
+            <seo>
+                <title>News</title>
+                <description>Fresh dummy news</description>
+                <keywords>news, fresh news, information</keywords>
+            </seo>
+        </piuga_news>
+    </default>
+</config>

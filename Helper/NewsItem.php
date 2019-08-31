@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Piuga\News\Helper;
 
+use Magento\Cms\Model\Template\FilterProvider;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Stdlib\DateTime;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Piuga\News\Api\NewsRepositoryInterface;
@@ -17,6 +20,25 @@ use Piuga\News\Api\Data\NewsInterface;
  */
 class NewsItem extends AbstractHelper
 {
+    /**
+     * Store configuration paths
+     */
+    // General paths
+    const CONFIG_PATH_BASE = 'piuga_news/';
+    const CONFIG_PATH_BASE_GENERAL = self::CONFIG_PATH_BASE . 'general/';
+    const CONFIG_PATH_ACTIVE = self::CONFIG_PATH_BASE_GENERAL . 'active';
+    const CONFIG_PATH_TITLE = self::CONFIG_PATH_BASE_GENERAL . 'title';
+    const CONFIG_PATH_URL_KEY= self::CONFIG_PATH_BASE_GENERAL . 'url_key';
+    const CONFIG_PATH_DESCRIPTION = self::CONFIG_PATH_BASE_GENERAL . 'description';
+    const CONFIG_PATH_ALLOWED_ITEMS = self::CONFIG_PATH_BASE_GENERAL . 'allowed_items';
+    const CONFIG_PATH_SORT_BY = self::CONFIG_PATH_BASE_GENERAL . 'sort_by';
+    const CONFIG_PATH_SORT_BY_DIRECTION = self::CONFIG_PATH_BASE_GENERAL . 'sort_by_direction';
+    // SEO configuration paths
+    const CONFIG_PATH_BASE_SEO = self::CONFIG_PATH_BASE . 'seo/';
+    const CONFIG_PATH_META_TITLE = self::CONFIG_PATH_BASE_SEO . 'title';
+    const CONFIG_PATH_META_DESCRIPTION = self::CONFIG_PATH_BASE_SEO . 'description';
+    const CONFIG_PATH_META_KEYWORDS = self::CONFIG_PATH_BASE_SEO . 'keywords';
+
     /**
      * @var NewsRepositoryInterface
      */
@@ -33,22 +55,38 @@ class NewsItem extends AbstractHelper
     protected $dateTime;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * @var FilterProvider
+     */
+    protected $filterProvider;
+
+    /**
      * NewsItem constructor.
      * @param Context $context
      * @param NewsRepositoryInterface $newsRepository
      * @param StoreManagerInterface $storeManager
      * @param DateTime $dateTime
+     * @param ScopeConfigInterface $scopeConfig
+     * @param FilterProvider $filterProvider
      */
     public function __construct(
         Context $context,
         NewsRepositoryInterface $newsRepository,
         StoreManagerInterface $storeManager,
-        DateTime $dateTime
+        DateTime $dateTime,
+        ScopeConfigInterface $scopeConfig,
+        FilterProvider $filterProvider
     ) {
         parent::__construct($context);
         $this->newsRepository = $newsRepository;
         $this->storeManager = $storeManager;
         $this->dateTime = $dateTime;
+        $this->scopeConfig = $scopeConfig;
+        $this->filterProvider = $filterProvider;
     }
 
     /**
@@ -90,7 +128,7 @@ class NewsItem extends AbstractHelper
      */
     public function getItemUrl(NewsInterface $news) : string
     {
-        return $this->_getUrl('news/' . $news->getUrlKey());
+        return $this->_getUrl($this->getNewsUrl() . '/' . $news->getUrlKey());
     }
 
     /**
@@ -106,5 +144,152 @@ class NewsItem extends AbstractHelper
         }
 
         return '';
+    }
+
+    /**
+     * Check if module is activated
+     *
+     * @return bool
+     */
+    public function isActive() : bool
+    {
+        return (bool)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_ACTIVE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getListTitle() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_TITLE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get list base URL
+     *
+     * @return string
+     */
+    public function getNewsUrl() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_URL_KEY,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get list description
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getListDescription() : string
+    {
+        return $this->filterProvider
+            ->getBlockFilter()
+            ->filter(
+                (string)$this->scopeConfig->getValue(
+                    self::CONFIG_PATH_META_DESCRIPTION,
+                    ScopeInterface::SCOPE_STORE
+                )
+            );
+    }
+
+    /**
+     * Get available items per page
+     *
+     * @return array
+     */
+    public function getAvailableLimit() : array
+    {
+        // Default items per page options
+        $availableLimit = [5 => 5, 10 => 10, 15 => 15];
+
+        $allowedItems = explode(',', (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_ALLOWED_ITEMS,
+            ScopeInterface::SCOPE_STORE
+        ));
+
+        if (count($allowedItems)) {
+            $availableLimit = [];
+            foreach ($allowedItems as $item) {
+                $availableLimit[(int)$item] = (int)$item;
+            }
+        }
+
+        return $availableLimit;
+    }
+
+    /**
+     * Get list sort by attribute
+     *
+     * @return string
+     */
+    public function getSortBy() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_SORT_BY,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get list sort by direction
+     *
+     * @return string
+     */
+    public function getSortByDirection() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_SORT_BY_DIRECTION,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get meta title
+     *
+     * @return string
+     */
+    public function getMetaTitle() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_META_TITLE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get meta description
+     *
+     * @return string
+     */
+    public function getMetaDescription() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_META_DESCRIPTION,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get meta keywords
+     *
+     * @return string
+     */
+    public function getMetaKeywords() : string
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::CONFIG_PATH_META_KEYWORDS,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 }

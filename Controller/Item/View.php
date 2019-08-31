@@ -60,8 +60,8 @@ class View extends Action
     {
         $newsItem = $this->newsHelper->getNewsItem();
 
-        // If news cannot be seen redirect to 404 page
-        if (!$newsItem) {
+        // If news cannot be seen or module is disabled, then redirect to 404 page
+        if (!$newsItem || !$this->newsHelper->isActive()) {
             $resultForward = $this->resultForwardFactory->create();
             $resultForward->forward('noroute');
 
@@ -90,9 +90,9 @@ class View extends Action
             $breadcrumbsBlock->addCrumb(
                 'news',
                 [
-                    'label' => __('News'),
-                    'title'    => __('News'),
-                    'link'  => $this->_url->getUrl('news')
+                    'label' => $this->newsHelper->getListTitle(),
+                    'title'    => $this->newsHelper->getListTitle(),
+                    'link'  => $this->_url->getUrl($this->newsHelper->getNewsUrl())
                 ]
             );
             $breadcrumbsBlock->addCrumb(

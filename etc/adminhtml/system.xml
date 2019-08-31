@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="piuga" translate="label" sortOrder="210">
+            <label>Piuga</label>
+        </tab>
+        <section id="piuga_news" type="text" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>News</label>
+            <tab>piuga</tab>
+            <resource>Piuga_News::system_config</resource>
+            <group id="general" type="text" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                    <comment>Fill title of list page</comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="url_key" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>News URL Key</label>
+                    <comment>Fill URL key for the list page</comment>
+                    <validate>required-entry validate-xml-identifier</validate>
+                    <depends>
+                        <field id="*/*/active">1</field>
+                    </depends>
+                </field>
+                <field id="description" translate="label comment" type="editor" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Piuga\News\Block\Adminhtml\System\Config\Editor</frontend_model>
+                    <label>Description</label>
+                    <comment>Fill description for list page</comment>
+                </field>
+                <field id="allowed_items" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Allowed items per page</label>
+                    <comment>Add comma separated numbers, that a user can choose from, for the items per page</comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="*/*/active">1</field>
+                    </depends>
+                </field>
+                <field id="sort_by" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Sort News List By</label>
+                    <source_model>Piuga\News\Model\Config\Source\SortBy</source_model>
+                    <depends>
+                        <field id="*/*/active">1</field>
+                    </depends>
+                </field>
+                <field id="sort_by_direction" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Sort News List Direction</label>
+                    <source_model>Piuga\News\Model\Config\Source\SortByDirection</source_model>
+                    <depends>
+                        <field id="*/*/active">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="seo" type="text" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Search Engine Optimization</label>
+                <field id="title" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Meta Title</label>
+                    <comment>Fill meta title of list page</comment>
+                </field>
+                <field id="description" translate="label comment" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Meta Description</label>
+                    <comment>Fill meta description for list page</comment>
+                </field>
+                <field id="keywords" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Meta Keywords</label>
+                    <comment>Fill meta keywords for list page</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
