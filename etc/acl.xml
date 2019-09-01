@@ -3,6 +3,13 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::content">
+                    <resource id="Piuga_News::news" title="News" sortOrder="30">
+                        <resource id="Piuga_News::edit_item" title="Edit Item" sortOrder="10" />
+                        <resource id="Piuga_News::save_item" title="Save Item" sortOrder="20" />
+                        <resource id="Piuga_News::delete_item" title="Delete Item" sortOrder="30" />
+                    </resource>
+                </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">

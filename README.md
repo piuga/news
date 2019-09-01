@@ -6,7 +6,7 @@ News module for Magento 2
 Facts
 -----
 
--  version: 1.5.0
+-  version: 1.6.0
 -  extension key: Piuga\_News
 
 Description
