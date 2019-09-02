@@ -53,7 +53,7 @@ Uninstallation
 
 From Magento 2 console run: 
 
- - `php bin/magento module:uninstall Redkiwi_MenuBuilder`
+ - `php bin/magento module:uninstall Piuga_News`
 
 Developer
 ---------

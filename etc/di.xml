@@ -13,4 +13,20 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="piuga_news_listing_data_source" xsi:type="string">Piuga\News\Model\ResourceModel\News\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Piuga\News\Model\ResourceModel\News\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">piuga_news_items</argument>
+            <argument name="eventPrefix" xsi:type="string">piuga_news_items_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">news_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Piuga\News\Model\ResourceModel\News</argument>
+        </arguments>
+    </type>
 </config>
