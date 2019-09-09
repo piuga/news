@@ -39,6 +39,17 @@
         </settings>
         <bookmark name="bookmarks"/>
         <columnsControls name="columns_controls"/>
+        <exportButton name="export_button">
+            <settings>
+                <options>
+                    <option name="txt" xsi:type="array">
+                        <item name="value" xsi:type="string">txt</item>
+                        <item name="label" xsi:type="string" translate="true">TXT</item>
+                        <item name="url" xsi:type="string">piuga_news/export/gridToTxt</item>
+                    </option>
+                </options>
+            </settings>
+        </exportButton>
         <filters name="listing_filters">
             <argument name="data" xsi:type="array">
                 <item name="observers" xsi:type="array">
