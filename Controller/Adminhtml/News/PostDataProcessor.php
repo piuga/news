@@ -50,7 +50,7 @@ class PostDataProcessor
         }
         $filterRules = [];
         // Filter dates
-        foreach ([NewsInterface::PUBLISH_AT, NewsInterface::CREATED_AT, NewsInterface::UPDATED_AT] as $dateField) {
+        foreach ([NewsInterface::PUBLISH_AT] as $dateField) {
             if (isset($data[$dateField]) && !empty($data[$dateField])) {
                 $filterRules[$dateField] = $this->dateFilter;
             }
@@ -81,7 +81,7 @@ class PostDataProcessor
             if (in_array($field, array_keys($requiredFields)) && $value == '') {
                 $valid = false;
                 $this->messageManager->addErrorMessage(
-                    __('To apply changes you should fill in hidden required "%1" field(s)', $requiredFields[$field])
+                    __('To apply changes you should fill in required "%1" field(s)', $requiredFields[$field])
                 );
             }
         }

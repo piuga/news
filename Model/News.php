@@ -147,7 +147,7 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function setCreatedAt(string $createdAt) : NewsInterface
+    public function setCreatedAt(?string $createdAt) : NewsInterface
     {
         return $this->setData(self::CREATED_AT, $createdAt);
     }
@@ -163,7 +163,7 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function setUpdatedAt(string $updateAt) : NewsInterface
+    public function setUpdatedAt(?string $updateAt) : NewsInterface
     {
         return $this->setData(self::UPDATED_AT, $updateAt);
     }
@@ -262,5 +262,17 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
     public function setImage(string $image) : NewsInterface
     {
         return $this->setData(self::IMAGE, $image);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeSave()
+    {
+        if ($this->hasDataChanges()) {
+            $this->setUpdatedAt(null);
+        }
+
+        return parent::beforeSave();
     }
 }

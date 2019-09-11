@@ -126,10 +126,10 @@ interface NewsInterface
     /**
      * Set creation date
      *
-     * @param string $createdAt
+     * @param string|null $createdAt
      * @return NewsInterface
      */
-    public function setCreatedAt(string $createdAt) : NewsInterface;
+    public function setCreatedAt(?string $createdAt) : NewsInterface;
 
     /**
      * Get update date
@@ -141,10 +141,10 @@ interface NewsInterface
     /**
      * Set update date
      *
-     * @param string $updateAt
+     * @param string|null $updateAt
      * @return NewsInterface
      */
-    public function setUpdatedAt(string $updateAt) : NewsInterface;
+    public function setUpdatedAt(?string $updateAt) : NewsInterface;
 
     /**
      * Get stores
