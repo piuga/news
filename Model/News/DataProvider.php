@@ -29,7 +29,7 @@ class DataProvider extends ModifierPoolDataProvider
     /**
      * @var array
      */
-    protected $loadedData;
+    protected $loadedData = [];
 
     /**
      * DataProvider constructor.
@@ -64,7 +64,7 @@ class DataProvider extends ModifierPoolDataProvider
      */
     public function getData() : array
     {
-        if (isset($this->loadedData)) {
+        if (!empty($this->loadedData)) {
             return $this->loadedData;
         }
 
