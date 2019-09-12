@@ -88,6 +88,9 @@ class Save extends Action implements HttpPostActionInterface
                 unset($data['id']);
             }
 
+            // Check and fill URL key
+            $data = $this->checkUrlKey($data);
+
             if ($id) {
                 try {
                     /** @var NewsInterface $model */
@@ -158,5 +161,25 @@ class Save extends Action implements HttpPostActionInterface
         }
 
         return $resultRedirect;
+    }
+
+    /**
+     * Check if URL key is empty, and if so convert title to URL key
+     *
+     * @param array $data
+     * @return array
+     */
+    private function checkUrlKey(array $data) : array
+    {
+        if (
+            isset($data[NewsInterface::URL_KEY]) &&
+            empty($data[NewsInterface::URL_KEY]) &&
+            isset($data[NewsInterface::TITLE]) &&
+            $data[NewsInterface::TITLE]
+        ) {
+            $data[NewsInterface::URL_KEY] = urlencode(strtolower(str_replace([' '], ['-'], $data[NewsInterface::TITLE])));
+        }
+
+        return $data;
     }
 }

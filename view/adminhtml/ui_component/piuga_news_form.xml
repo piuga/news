@@ -235,8 +235,9 @@
                 <dataType>text</dataType>
                 <label translate="true">URL Key</label>
                 <dataScope>url_key</dataScope>
+                <notice translate="true"><![CDATA[Leave this empty if you want title to be used as URL key. Example: 'Lorem ipsum' title will be used as 'lorem-ipsum' URL key.]]></notice>
                 <validation>
-                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="required-entry" xsi:type="boolean">false</rule>
                     <rule name="validate-xml-identifier" xsi:type="boolean">true</rule>
                 </validation>
             </settings>
