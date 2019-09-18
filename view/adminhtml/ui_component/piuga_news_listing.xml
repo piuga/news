@@ -153,6 +153,14 @@
                 <sorting>desc</sorting>
             </settings>
         </column>
+        <column name="image" class="Piuga\News\Ui\Component\Listing\Column\Image" component="Magento_Ui/js/grid/columns/thumbnail">
+            <settings>
+                <sortable>false</sortable>
+                <altField>title</altField>
+                <hasPreview>1</hasPreview>
+                <label translate="true">Image</label>
+            </settings>
+        </column>
         <column name="title">
             <settings>
                 <filter>text</filter>

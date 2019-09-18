@@ -29,4 +29,67 @@
             <argument name="resourceModel" xsi:type="string">Piuga\News\Model\ResourceModel\News</argument>
         </arguments>
     </type>
+
+    <virtualType name="Piuga\News\NewsImageUpload" type="Piuga\News\Model\FileUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">news/tmp/image</argument>
+            <argument name="basePath" xsi:type="string">news/image</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="jpg" xsi:type="string">image/jpg</item>
+                <item name="jpeg" xsi:type="string">image/jpeg</item>
+                <item name="gif" xsi:type="string">image/gif</item>
+                <item name="png" xsi:type="string">image/png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Piuga\News\NewsFileUpload" type="Piuga\News\Model\FileUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">news/tmp/file</argument>
+            <argument name="basePath" xsi:type="string">news/file</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="doc" xsi:type="string">doc</item>
+                <item name="docx" xsi:type="string">docx</item>
+                <item name="pdf" xsi:type="string">pdf</item>
+                <item name="txt" xsi:type="string">txt</item>
+                <item name="xml" xsi:type="string">xml</item>
+                <item name="xls" xsi:type="string">xls</item>
+                <item name="odt" xsi:type="string">odt</item>
+                <item name="rar" xsi:type="string">rar</item>
+                <item name="zip" xsi:type="string">zip</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="doc" xsi:type="string">application/msword</item>
+                <item name="docx" xsi:type="string">application/vnd.openxmlformats-officedocument.wordprocessingml.document</item>
+                <item name="pdf" xsi:type="string">application/pdf</item>
+                <item name="txt" xsi:type="string">text/plain</item>
+                <item name="xml" xsi:type="string">text/xml</item>
+                <item name="xls" xsi:type="string">application/vnd.ms-excel</item>
+                <item name="odt" xsi:type="string">application/vnd.oasis.opendocument.text</item>
+                <item name="rar" xsi:type="string">application/x-rar-compressed</item>
+                <item name="zip" xsi:type="string">application/zip</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Piuga\News\Controller\Adminhtml\News\Image\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Piuga\News\NewsImageUpload</argument>
+        </arguments>
+    </type>
+    <type name="Piuga\News\Controller\Adminhtml\News\File\Upload">
+        <arguments>
+            <argument name="fileUploader" xsi:type="object">Piuga\News\NewsFileUpload</argument>
+        </arguments>
+    </type>
+    <type name="Piuga\News\Model\FileSave">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Piuga\News\NewsImageUpload</argument>
+            <argument name="fileUploader" xsi:type="object">Piuga\News\NewsFileUpload</argument>
+        </arguments>
+    </type>
 </config>

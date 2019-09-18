@@ -9,6 +9,7 @@
         <column xsi:type="mediumtext" name="content" nullable="true" comment="Content"/>
         <column xsi:type="mediumtext" name="short_content" nullable="true" comment="Short Content"/>
         <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Image"/>
+        <column xsi:type="varchar" name="file" nullable="true" length="255" comment="File"/>
         <column xsi:type="timestamp" name="publish_at" on_update="false" nullable="false" comment="Publish Time"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created Time"/>

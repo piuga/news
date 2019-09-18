@@ -14,6 +14,7 @@ interface NewsInterface
     const AUTHOR = 'author';
     const CONTENT = 'content';
     const CREATED_AT = 'created_at';
+    const FILE = 'file';
     const IMAGE = 'image';
     const META_DESCRIPTION = 'meta_description';
     const META_KEYWORDS = 'meta_keywords';
@@ -235,4 +236,37 @@ interface NewsInterface
      * @return NewsInterface
      */
     public function setImage(string $image) : NewsInterface;
+
+    /**
+     * Returns image url
+     *
+     * @param string $attributeCode
+     * @return bool|string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getImageUrl(string $attributeCode);
+
+    /**
+     * Get file
+     *
+     * @return string|null
+     */
+    public function getFile() : ?string;
+
+    /**
+     * Set file
+     *
+     * @param string $file
+     * @return NewsInterface
+     */
+    public function setFile(string $file) : NewsInterface;
+
+    /**
+     * Returns file url
+     *
+     * @param string $attributeCode
+     * @return bool|string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getFileUrl(string $attributeCode);
 }

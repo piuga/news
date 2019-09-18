@@ -9,12 +9,17 @@ $news = $viewModel->getNewsItem();
     <?php if ($news->getImage()): ?>
         <div class="news-image">
             <span itemprop="image">
-                <img src="<?= $news->getImage() ?>" alt="<?= $news->getTitle() ?>" title="<?= $news->getTitle() ?>"/>
+                <img src="<?= $news->getImageUrl() ?>" alt="<?= $news->getTitle() ?>" title="<?= $news->getTitle() ?>"/>
             </span>
         </div>
     <?php endif; ?>
     <div class="news-content" itemprop="articleBody">
         <?= $news->getContent() ?>
+        <?php if ($news->getFile()): ?>
+            <div class="more-info">
+                <?= __('For more information <a href="%1" target="_blank">download this</a> file.', $news->getFileUrl()); ?>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="author-date">
         <span class="author">

@@ -161,17 +161,61 @@
             <collapsible>true</collapsible>
             <label translate="true">Content</label>
         </settings>
-        <field name="image" sortOrder="10" formElement="input">
+        <field name="image" sortOrder="10" formElement="imageUploader">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="source" xsi:type="string">news</item>
                 </item>
             </argument>
             <settings>
-                <dataType>text</dataType>
+                <elementTmpl>ui/form/element/uploader/image</elementTmpl>
+                <dataType>string</dataType>
                 <label translate="true">Image</label>
-                <dataScope>image</dataScope>
+                <visible>true</visible>
+                <required>false</required>
             </settings>
+            <formElements>
+                <imageUploader>
+                    <settings>
+                        <required>false</required>
+                        <uploaderConfig>
+                            <param xsi:type="url" name="url" path="piuga_news/news_image/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Piuga_News/image-preview</previewTmpl>
+                        <openDialogTitle>News Gallery</openDialogTitle>
+                        <initialMediaGalleryOpenSubpath>news/image</initialMediaGalleryOpenSubpath>
+                        <allowedExtensions>jpg jpeg gif png</allowedExtensions>
+                        <maxFileSize>4194304</maxFileSize>
+                    </settings>
+                </imageUploader>
+            </formElements>
+        </field>
+        <field name="file" sortOrder="15" formElement="fileUploader">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">news</item>
+                </item>
+            </argument>
+            <settings>
+                <elementTmpl>ui/form/element/uploader/uploader</elementTmpl>
+                <dataType>string</dataType>
+                <label translate="true">File</label>
+                <visible>true</visible>
+                <required>false</required>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <required>false</required>
+                        <uploaderConfig>
+                            <param xsi:type="url" name="url" path="piuga_news/news_file/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Piuga_News/file-preview</previewTmpl>
+                        <allowedExtensions>doc docx pdf txt xml xls odt rar zip</allowedExtensions>
+                        <maxFileSize>16777216</maxFileSize>
+                    </settings>
+                </fileUploader>
+            </formElements>
         </field>
         <field name="short_content" template="ui/form/field" sortOrder="20" formElement="wysiwyg">
             <argument name="data" xsi:type="array">

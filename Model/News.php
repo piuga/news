@@ -3,8 +3,14 @@ declare(strict_types=1);
 
 namespace Piuga\News\Model;
 
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Piuga\News\Api\Data\NewsInterface;
 use Piuga\News\Model\ResourceModel\News as NewsResource;
 
@@ -39,6 +45,32 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
      * @var string
      */
     protected $_eventObject = 'news_item';
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * News constructor.
+     * @param Context $context
+     * @param Registry $registry
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param StoreManagerInterface $storeManager
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        StoreManagerInterface $storeManager,
+        array $data = []
+    ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->storeManager = $storeManager;
+    }
 
     /**
      * Initialize resource model
@@ -267,6 +299,22 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
     /**
      * {@inheritdoc}
      */
+    public function getFile() : ?string
+    {
+        return $this->getData(self::FILE);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFile(string $file) : NewsInterface
+    {
+        return $this->setData(self::FILE, $file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function beforeSave()
     {
         if ($this->hasDataChanges()) {
@@ -274,5 +322,61 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
         }
 
         return parent::beforeSave();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImageUrl(string $attributeCode = 'image')
+    {
+        $url = false;
+        $image = $this->getData($attributeCode);
+        if ($image) {
+            if (is_string($image)) {
+                $store = $this->storeManager->getStore();
+                $isRelativeUrl = substr($image, 0, 1) === '/';
+                $mediaBaseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
+
+                if ($isRelativeUrl) {
+                    $url = $image;
+                } else {
+                    $url = rtrim($mediaBaseUrl, '/') . '/' . $image;
+                }
+            } else {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Something went wrong while getting the image url.')
+                );
+            }
+        }
+
+        return $url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileUrl(string $attributeCode = 'file')
+    {
+        $url = false;
+        $file = $this->getData($attributeCode);
+        if ($file) {
+            if (is_string($file)) {
+                $store = $this->storeManager->getStore();
+                $isRelativeUrl = substr($file, 0, 1) === '/';
+                $mediaBaseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
+
+                if ($isRelativeUrl) {
+                    $url = $file;
+                } else {
+                    $url = $mediaBaseUrl . '/' . $file;
+                }
+            } else {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Something went wrong while getting the file url.')
+                );
+            }
+        }
+
+        return $url;
     }
 }

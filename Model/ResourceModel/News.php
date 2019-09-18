@@ -10,6 +10,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Framework\Stdlib\DateTime;
 use Piuga\News\Api\Data\NewsInterface;
+use Piuga\News\Model\FileSave;
 
 /**
  * Class News
@@ -28,21 +29,29 @@ class News extends AbstractDb
     protected $entityManager;
 
     /**
+     * @var FileSave
+     */
+    protected $fileSave;
+
+    /**
      * News constructor.
      * @param Context $context
      * @param DateTime $dateTime
      * @param EntityManager $entityManager
      * @param null $connectionName
+     * @param FileSave $fileSave
      */
     public function __construct(
         Context $context,
         DateTime $dateTime,
         EntityManager $entityManager,
-        $connectionName = null
+        $connectionName = null,
+        FileSave $fileSave
     ) {
         parent::__construct($context, $connectionName);
         $this->dateTime = $dateTime;
         $this->entityManager = $entityManager;
+        $this->fileSave = $fileSave;
     }
 
     /**
@@ -86,7 +95,24 @@ class News extends AbstractDb
             );
         }
 
+        // Prepare file value(s) for save
+        $this->fileSave->beforeSave($object);
+
         return parent::_beforeSave($object);
+    }
+
+    /**
+     * Process data after saving
+     *
+     * @param AbstractModel $object
+     * @return AbstractDb
+     */
+    protected function _afterSave(AbstractModel $object)
+    {
+        // Process file(s) after save
+        $this->fileSave->afterSave($object);
+
+        return parent::_afterSave($object);
     }
 
     /**
