@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Piuga\News\Model;
 
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
@@ -52,12 +54,18 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
     protected $storeManager;
 
     /**
+     * @var State
+     */
+    protected $appState;
+
+    /**
      * News constructor.
      * @param Context $context
      * @param Registry $registry
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param StoreManagerInterface $storeManager
+     * @param State $state
      * @param array $data
      */
     public function __construct(
@@ -66,10 +74,12 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         StoreManagerInterface $storeManager,
+        State $state,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->storeManager = $storeManager;
+        $this->appState = $state;
     }
 
     /**
@@ -361,14 +371,22 @@ class News extends AbstractModel implements NewsInterface, IdentityInterface
         $file = $this->getData($attributeCode);
         if ($file) {
             if (is_string($file)) {
-                $store = $this->storeManager->getStore();
-                $isRelativeUrl = substr($file, 0, 1) === '/';
-                $mediaBaseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
-
-                if ($isRelativeUrl) {
-                    $url = $file;
+                // For FE stores, file is downloaded through a controller
+                if ($this->appState->getAreaCode() === Area::AREA_FRONTEND) {
+                    $url = $this->storeManager->getStore()->getUrl(
+                        'news/file/download',
+                        ['id' => $this->getId()]
+                    );
                 } else {
-                    $url = $mediaBaseUrl . '/' . $file;
+                    $store = $this->storeManager->getStore();
+                    $isRelativeUrl = substr($file, 0, 1) === '/';
+                    $mediaBaseUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
+
+                    if ($isRelativeUrl) {
+                        $url = $file;
+                    } else {
+                        $url = $mediaBaseUrl . '/' . $file;
+                    }
                 }
             } else {
                 throw new \Magento\Framework\Exception\LocalizedException(

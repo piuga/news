@@ -180,4 +180,20 @@ class FileInfo
 
         return $mediaDirectoryRelativeSubpath;
     }
+
+    /**
+     * Open file to be read
+     *
+     * @param string $file
+     * @return Filesystem\File\ReadInterface
+     * @throws FileSystemException
+     */
+    public function readFile(string $file)
+    {
+        $filePath = $this->getFilePath($file);
+        $mediaDirectoryRead = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
+        $absoluteFilePath = $mediaDirectoryRead->getAbsolutePath($filePath);
+
+        return $mediaDirectoryRead->openFile($absoluteFilePath);
+    }
 }
