@@ -7,7 +7,6 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
-
 /**
  * Class AddSampleNews
  * @package Piuga\News\Setup\Patch\Data

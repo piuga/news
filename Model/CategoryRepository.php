@@ -12,41 +12,41 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use Magento\Store\Model\Store;
-use Piuga\News\Api\Data\NewsInterface;
-use Piuga\News\Api\Data\NewsInterfaceFactory;
-use Piuga\News\Api\Data\NewsSearchResultsInterfaceFactory;
-use Piuga\News\Api\NewsRepositoryInterface;
-use Piuga\News\Model\ResourceModel\News as NewsResource;
-use Piuga\News\Model\ResourceModel\News\CollectionFactory as NewsCollectionFactory;
+use Piuga\News\Api\Data\CategoryInterface;
+use Piuga\News\Api\Data\CategoryInterfaceFactory;
+use Piuga\News\Api\Data\CategorySearchResultsInterfaceFactory;
+use Piuga\News\Api\CategoryRepositoryInterface;
+use Piuga\News\Model\ResourceModel\Category as CategoryResource;
+use Piuga\News\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 
 /**
- * Class NewsRepository
+ * Class CategoryRepository
  * @package Piuga\News\Model
  */
-class NewsRepository implements NewsRepositoryInterface
+class CategoryRepository implements CategoryRepositoryInterface
 {
     /**
-     * @var NewsResource
+     * @var CategoryResource
      */
     protected $resource;
 
     /**
-     * @var NewsInterface
+     * @var CategoryInterface
      */
-    protected $newsInterfaceFactory;
+    protected $categoryInterfaceFactory;
 
     /**
-     * @var NewsFactory
+     * @var CategoryFactory
      */
-    protected $newsFactory;
+    protected $categoryFactory;
 
     /**
-     * @var NewsCollectionFactory
+     * @var CategoryCollectionFactory
      */
-    protected $newsCollectionFactory;
+    protected $categoryCollectionFactory;
 
     /**
-     * @var NewsSearchResultsInterfaceFactory
+     * @var CategorySearchResultsInterfaceFactory
      */
     protected $searchResultsFactory;
 
@@ -66,30 +66,30 @@ class NewsRepository implements NewsRepositoryInterface
     protected $collectionProcessor;
 
     /**
-     * NewsRepository constructor.
-     * @param NewsResource $resource
-     * @param NewsFactory $newsFactory
-     * @param NewsInterfaceFactory $newsInterfaceFactory
-     * @param NewsCollectionFactory $newsCollectionFactory
-     * @param NewsSearchResultsInterfaceFactory $newsSearchResultsInterfaceFactory
+     * CategoryRepository constructor.
+     * @param CategoryResource $resource
+     * @param CategoryFactory $categoryFactory
+     * @param CategoryInterfaceFactory $categoryInterfaceFactory
+     * @param CategoryCollectionFactory $categoryCollectionFactory
+     * @param CategorySearchResultsInterfaceFactory $newsSearchResultsInterfaceFactory
      * @param DataObjectHelper $dataObjectHelper
      * @param DataObjectProcessor $dataObjectProcessor
      * @param CollectionProcessorInterface $collectionProcessor
      */
     public function __construct(
-        NewsResource $resource,
-        NewsFactory $newsFactory,
-        NewsInterfaceFactory $newsInterfaceFactory,
-        NewsCollectionFactory $newsCollectionFactory,
-        NewsSearchResultsInterfaceFactory $newsSearchResultsInterfaceFactory,
+        CategoryResource $resource,
+        CategoryFactory $categoryFactory,
+        CategoryInterfaceFactory $categoryInterfaceFactory,
+        CategoryCollectionFactory $categoryCollectionFactory,
+        CategorySearchResultsInterfaceFactory $newsSearchResultsInterfaceFactory,
         DataObjectHelper $dataObjectHelper,
         DataObjectProcessor $dataObjectProcessor,
         CollectionProcessorInterface $collectionProcessor
     ) {
         $this->resource = $resource;
-        $this->newsFactory = $newsFactory;
-        $this->newsInterfaceFactory = $newsInterfaceFactory;
-        $this->newsCollectionFactory = $newsCollectionFactory;
+        $this->categoryFactory = $categoryFactory;
+        $this->categoryInterfaceFactory = $categoryInterfaceFactory;
+        $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->searchResultsFactory = $newsSearchResultsInterfaceFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->dataObjectProcessor = $dataObjectProcessor;
@@ -99,7 +99,7 @@ class NewsRepository implements NewsRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function save(NewsInterface $item) : NewsInterface
+    public function save(CategoryInterface $item) : CategoryInterface
     {
         if (!$item->getStores()) {
             $item->setStores((string)Store::DEFAULT_STORE_ID);
@@ -109,7 +109,7 @@ class NewsRepository implements NewsRepositoryInterface
             $this->resource->save($item);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__(
-                'Could not save the news item: %1',
+                'Could not save the news category: %1',
                 $exception->getMessage()
             ));
         }
@@ -120,12 +120,12 @@ class NewsRepository implements NewsRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getById(int $id) : NewsInterface
+    public function getById(int $id) : CategoryInterface
     {
-        $item = $this->newsFactory->create();
+        $item = $this->categoryFactory->create();
         $this->resource->load($item, $id);
         if (!$item->getId()) {
-            throw new NoSuchEntityException(__('News item with ID "%1" does not exist.', $id));
+            throw new NoSuchEntityException(__('News category with ID "%1" does not exist.', $id));
         }
 
         return $item;
@@ -136,7 +136,7 @@ class NewsRepository implements NewsRepositoryInterface
      */
     public function getList(SearchCriteriaInterface $criteria) : SearchResults
     {
-        $collection = $this->newsCollectionFactory->create();
+        $collection = $this->categoryCollectionFactory->create();
         $this->collectionProcessor->process($criteria, $collection);
 
         $searchResults = $this->searchResultsFactory->create();
@@ -150,13 +150,13 @@ class NewsRepository implements NewsRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function delete(NewsInterface $item) : bool
+    public function delete(CategoryInterface $item) : bool
     {
         try {
             $this->resource->delete($item);
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(__(
-                'Could not delete the news item: %1',
+                'Could not delete the news category: %1',
                 $exception->getMessage()
             ));
         }

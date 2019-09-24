@@ -3,6 +3,9 @@
     <preference for="Piuga\News\Api\NewsRepositoryInterface" type="Piuga\News\Model\NewsRepository"/>
     <preference for="Piuga\News\Api\Data\NewsInterface" type="Piuga\News\Model\News"/>
     <preference for="Piuga\News\Api\Data\NewsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Piuga\News\Api\CategoryRepositoryInterface" type="Piuga\News\Model\CategoryRepository"/>
+    <preference for="Piuga\News\Api\Data\CategoryInterface" type="Piuga\News\Model\Category"/>
+    <preference for="Piuga\News\Api\Data\CategorySearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
 
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
@@ -10,6 +13,9 @@
                 <item name="getNewsItem" xsi:type="object">Piuga\News\Console\Command\GetNewsItem</item>
                 <item name="addNewsItem" xsi:type="object">Piuga\News\Console\Command\AddNewsItem</item>
                 <item name="newsItemStatus" xsi:type="object">Piuga\News\Console\Command\NewsItemStatus</item>
+                <item name="getNewsCategory" xsi:type="object">Piuga\News\Console\Command\GetNewsCategory</item>
+                <item name="addNewsCategory" xsi:type="object">Piuga\News\Console\Command\AddNewsCategory</item>
+                <item name="newsCategoryStatus" xsi:type="object">Piuga\News\Console\Command\NewsCategoryStatus</item>
             </argument>
         </arguments>
     </type>
