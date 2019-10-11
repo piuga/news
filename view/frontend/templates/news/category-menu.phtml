@@ -1,0 +1,19 @@
+<?php
+/** @var \Magento\Framework\View\Element\AbstractBlock $block */
+/** @var \Piuga\News\ViewModel\CategoryMenu $viewModel */
+$viewModel = $block->getViewModel();
+$categories = $viewModel->getActiveCategories();
+if (count($categories)): ?>
+    <div class="block block-categories-menu widget">
+        <div class="block-title">
+            <strong role="heading" aria-level="2"><?php echo __('News categories'); ?></strong>
+        </div>
+        <ul class="category-menu">
+            <?php foreach ($categories as $category): ?>
+                <li>
+                    <a href="<?php echo $viewModel->getCategoryLink($category); ?>"><?php echo $category->getTitle(); ?></a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif;

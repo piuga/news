@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Piuga\News\Controller\Item;
+namespace Piuga\News\Controller\Category;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -12,7 +12,7 @@ use Piuga\News\Helper\NewsItem;
 
 /**
  * Class View
- * @package Piuga\News\Controller\Item
+ * @package Piuga\News\Controller\Category
  */
 class View extends Action
 {
@@ -58,10 +58,10 @@ class View extends Action
      */
     public function execute() : ResultInterface
     {
-        $newsItem = $this->newsHelper->getNewsItem();
+        $newsCategory = $this->newsHelper->getNewsCategory();
 
-        // If news cannot be seen or module is disabled, then redirect to 404 page
-        if (!$newsItem || !$this->newsHelper->isActive()) {
+        // If news category cannot be seen or module is disabled, then redirect to 404 page
+        if (!$newsCategory || !$this->newsHelper->isActive()) {
             $resultForward = $this->resultForwardFactory->create();
             $resultForward->forward('noroute');
 
@@ -70,11 +70,11 @@ class View extends Action
 
         $resultPage = $this->resultPageFactory->create();
 
-        $resultPage->getConfig()->getTitle()->set($newsItem->getTitle());
+        $resultPage->getConfig()->getTitle()->set($newsCategory->getTitle());
         /** Set metadata */
-        $resultPage->getConfig()->setMetaTitle($newsItem->getTitle());
-        $resultPage->getConfig()->setDescription($newsItem->getMetaDescription());
-        $resultPage->getConfig()->setKeywords($newsItem->getMetaKeywords());
+        $resultPage->getConfig()->setMetaTitle($newsCategory->getTitle());
+        $resultPage->getConfig()->setDescription($newsCategory->getMetaDescription());
+        $resultPage->getConfig()->setKeywords($newsCategory->getMetaKeywords());
 
         /** @var \Magento\Theme\Block\Html\Breadcrumbs $breadcrumbsBlock */
         $breadcrumbsBlock = $resultPage->getLayout()->getBlock('breadcrumbs');
@@ -83,33 +83,23 @@ class View extends Action
                 'home',
                 [
                     'label' => __('Home'),
-                    'title' => __('Home'),
-                    'link' => $this->_url->getUrl('')
+                    'title'    => __('Home'),
+                    'link'  => $this->_url->getUrl('')
                 ]
             );
             $breadcrumbsBlock->addCrumb(
                 'news',
                 [
                     'label' => $this->newsHelper->getListTitle(),
-                    'title' => $this->newsHelper->getListTitle(),
-                    'link' => $this->_url->getUrl($this->newsHelper->getNewsUrl())
+                    'title'    => $this->newsHelper->getListTitle(),
+                    'link'  => $this->_url->getUrl($this->newsHelper->getNewsUrl())
                 ]
             );
-            if ($category = $this->newsHelper->getNewsCategory()) {
-                $breadcrumbsBlock->addCrumb(
-                    'news-category',
-                    [
-                        'label' => $category->getTitle(),
-                        'title' => $category->getTitle(),
-                        'link' => $this->newsHelper->getCategoryUrl($category)
-                    ]
-                );
-            }
             $breadcrumbsBlock->addCrumb(
-                'news-' . $newsItem->getId(),
+                'news-category-' . $newsCategory->getId(),
                 [
-                    'label' => $newsItem->getTitle(),
-                    'title' => $newsItem->getTitle()
+                    'label' => $newsCategory->getTitle(),
+                    'title' => $newsCategory->getTitle()
                 ]
             );
         }

@@ -11,7 +11,9 @@ use Magento\Framework\Stdlib\DateTime;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
+use Piuga\News\Api\CategoryRepositoryInterface;
 use Piuga\News\Api\NewsRepositoryInterface;
+use Piuga\News\Api\Data\CategoryInterface;
 use Piuga\News\Api\Data\NewsInterface;
 
 /**
@@ -28,7 +30,7 @@ class NewsItem extends AbstractHelper
     const CONFIG_PATH_BASE_GENERAL = self::CONFIG_PATH_BASE . 'general/';
     const CONFIG_PATH_ACTIVE = self::CONFIG_PATH_BASE_GENERAL . 'active';
     const CONFIG_PATH_TITLE = self::CONFIG_PATH_BASE_GENERAL . 'title';
-    const CONFIG_PATH_URL_KEY= self::CONFIG_PATH_BASE_GENERAL . 'url_key';
+    const CONFIG_PATH_URL_KEY = self::CONFIG_PATH_BASE_GENERAL . 'url_key';
     const CONFIG_PATH_DESCRIPTION = self::CONFIG_PATH_BASE_GENERAL . 'description';
     const CONFIG_PATH_ALLOWED_ITEMS = self::CONFIG_PATH_BASE_GENERAL . 'allowed_items';
     const CONFIG_PATH_SORT_BY = self::CONFIG_PATH_BASE_GENERAL . 'sort_by';
@@ -65,6 +67,11 @@ class NewsItem extends AbstractHelper
     protected $filterProvider;
 
     /**
+     * @var CategoryRepositoryInterface
+     */
+    protected $categoryRepository;
+
+    /**
      * NewsItem constructor.
      * @param Context $context
      * @param NewsRepositoryInterface $newsRepository
@@ -72,6 +79,7 @@ class NewsItem extends AbstractHelper
      * @param DateTime $dateTime
      * @param ScopeConfigInterface $scopeConfig
      * @param FilterProvider $filterProvider
+     * @param CategoryRepositoryInterface $categoryRepository
      */
     public function __construct(
         Context $context,
@@ -79,7 +87,8 @@ class NewsItem extends AbstractHelper
         StoreManagerInterface $storeManager,
         DateTime $dateTime,
         ScopeConfigInterface $scopeConfig,
-        FilterProvider $filterProvider
+        FilterProvider $filterProvider,
+        CategoryRepositoryInterface $categoryRepository
     ) {
         parent::__construct($context);
         $this->newsRepository = $newsRepository;
@@ -87,6 +96,7 @@ class NewsItem extends AbstractHelper
         $this->dateTime = $dateTime;
         $this->scopeConfig = $scopeConfig;
         $this->filterProvider = $filterProvider;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -121,14 +131,61 @@ class NewsItem extends AbstractHelper
     }
 
     /**
+     * Get news category based on request ID or URL key
+     *
+     * @return CategoryInterface|null
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getNewsCategory() : ?CategoryInterface
+    {
+        try {
+            $id = (int)$this->_getRequest()->getParam('cat_id');
+            $newsCategory = $this->categoryRepository->getById($id);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        // Check if news category is enabled
+        if (!$newsCategory || !$newsCategory->getStatus()) {
+            return null;
+        }
+
+        // Check stores
+        $currentStoreId = $this->storeManager->getStore()->getId();
+        $stores = [Store::DEFAULT_STORE_ID, $currentStoreId];
+        $newsCategoryStores = explode(',', $newsCategory->getStores());
+        if (!count(array_intersect($stores, $newsCategoryStores))) {
+            return null;
+        }
+
+        return $newsCategory;
+    }
+
+    /**
      * Get news item detail page link
      *
      * @param NewsInterface $news
+     * @param CategoryInterface|null $category
      * @return string
      */
-    public function getItemUrl(NewsInterface $news) : string
+    public function getItemUrl(NewsInterface $news, CategoryInterface $category = null) : string
     {
+        if ($category) {
+            return $this->_getUrl($this->getNewsUrl() . '/' . $category->getUrlKey() . '/' . $news->getUrlKey());
+        }
+
         return $this->_getUrl($this->getNewsUrl() . '/' . $news->getUrlKey());
+    }
+
+    /**
+     * Get news category page link
+     *
+     * @param CategoryInterface $category
+     * @return string
+     */
+    public function getCategoryUrl(CategoryInterface $category) : string
+    {
+        return $this->_getUrl($this->getNewsUrl() . '/' . $category->getUrlKey());
     }
 
     /**

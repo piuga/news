@@ -4,9 +4,9 @@
     <update handle="news_default"/>
     <body>
         <referenceContainer name="content">
-            <block name="piuga.news.view" template="Piuga_News::news/view.phtml">
+            <block name="piuga.news.category" template="Piuga_News::news/category.phtml">
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Piuga\News\ViewModel\NewsView</argument>
+                    <argument name="view_model" xsi:type="object">Piuga\News\ViewModel\CategoryView</argument>
                 </arguments>
             </block>
         </referenceContainer>
