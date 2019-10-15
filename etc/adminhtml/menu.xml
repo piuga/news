@@ -23,6 +23,7 @@
         <add
             id="Piuga_News::news_add"
             title="Add News"
+            translate="title"
             module="Piuga_News"
             sortOrder="20"
             parent="Piuga_News::news"
@@ -30,10 +31,31 @@
             resource="Piuga_News::save_item"
         />
         <add
-            id="Piuga_News::settings"
-            title="Settings"
+            id="Piuga_News::category_grid"
+            title="Categories"
+            translate="title"
             module="Piuga_News"
             sortOrder="30"
+            parent="Piuga_News::news"
+            action="piuga_news/category"
+            resource="Piuga_News::news"
+        />
+        <add
+            id="Piuga_News::category_add"
+            title="Add Category"
+            translate="title"
+            module="Piuga_News"
+            sortOrder="40"
+            parent="Piuga_News::news"
+            action="piuga_news/category/create"
+            resource="Piuga_News::save_category"
+        />
+        <add
+            id="Piuga_News::settings"
+            title="Settings"
+            translate="title"
+            module="Piuga_News"
+            sortOrder="50"
             parent="Piuga_News::news"
             action="adminhtml/system_config/edit/section/piuga_news"
             resource="Piuga_News::system_config"

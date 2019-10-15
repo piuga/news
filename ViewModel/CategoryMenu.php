@@ -12,7 +12,6 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Piuga\News\Api\CategoryRepositoryInterface;
 use Piuga\News\Api\Data\CategoryInterface;
-use Piuga\News\Controller\Router;
 use Piuga\News\Helper\NewsItem;
 
 /**
