@@ -106,6 +106,14 @@ class Save extends Action implements HttpPostActionInterface
             }
             $model->setData($data);
 
+            // Attach selected news
+            if (isset($data['category_news'])
+                && is_string($data['category_news'])
+            ) {
+                $news = json_decode($data['category_news'], true);
+                $model->setPostedNews($news);
+            }
+
             if (!$this->dataProcessor->validate($data)) {
                 return $resultRedirect->setPath('*/*/edit', ['id' => $model->getId(), '_current' => true]);
             }

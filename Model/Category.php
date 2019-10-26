@@ -219,6 +219,24 @@ class Category extends AbstractModel implements CategoryInterface, IdentityInter
     /**
      * {@inheritdoc}
      */
+    public function getNewsPosition() : array
+    {
+        if (!$this->getId()) {
+            return [];
+        }
+
+        $news = $this->getData(self::NEWS_POSITION);
+        if ($news === null) {
+            $news = $this->getResource()->getNewsPosition($this);
+            $this->setData(self::NEWS_POSITION, $news);
+        }
+
+        return $news;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function beforeSave()
     {
         if ($this->hasDataChanges()) {

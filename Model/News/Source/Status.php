@@ -32,4 +32,19 @@ class Status implements OptionSourceInterface
 
         return $options;
     }
+
+    /**
+     * Get options array
+     *
+     * @return array
+     */
+    public function getOptionArray() : array
+    {
+        $options = [];
+        foreach ($this->toOptionArray() as $option) {
+            $options[$option['value']] = (string)$option['label'];
+        }
+
+        return $options;
+    }
 }

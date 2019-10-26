@@ -51,4 +51,30 @@
             <column name="url_key"/>
         </index>
     </table>
+    <table name="piuga_news_categories_items" resource="default" engine="innodb"
+           comment="News Items To Category Linkage Table">
+        <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="category_id" padding="10" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Category ID"/>
+        <column xsi:type="int" name="news_id" padding="10" unsigned="true" nullable="false" identity="false"
+                default="0" comment="News ID"/>
+        <column xsi:type="int" name="position" padding="11" unsigned="false" nullable="false" identity="false"
+                default="0" comment="Position"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+            <column name="category_id"/>
+            <column name="news_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PIUGA_NEWS_CAT_ITM_NEWS_ID" table="piuga_news_categories_items"
+                    column="news_id" referenceTable="piuga_news_items" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PIUGA_NEWS_CAT_ITM_CAT_ID" table="piuga_news_categories_items"
+                    column="category_id" referenceTable="piuga_news_categories" referenceColumn="id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="PIUGA_NEWS_CAT_ITM_NEWS_ID_CAT_ID">
+            <column name="category_id"/>
+            <column name="news_id"/>
+        </constraint>
+        <index referenceId="PIUGA_NEWS_CATEGORY_ITEMS_NEWS_ID" indexType="btree">
+            <column name="news_id"/>
+        </index>
+    </table>
 </schema>

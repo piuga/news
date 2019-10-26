@@ -16,6 +16,7 @@ interface CategoryInterface
     const CREATED_AT = 'created_at';
     const META_DESCRIPTION = 'meta_description';
     const META_KEYWORDS = 'meta_keywords';
+    const NEWS_POSITION = 'news_position';
     const POSITION = 'position';
     const TITLE = 'title';
     const UPDATED_AT = 'updated_at';
@@ -187,4 +188,13 @@ interface CategoryInterface
      * @return CategoryInterface
      */
     public function setMetaKeywords(string $metaKeywords) : CategoryInterface;
+
+    /**
+     * Retrieve array of news IDs for category
+     * The array returned has the following format:
+     * array($newsId => $position)
+     *
+     * @return array
+     */
+    public function getNewsPosition() : array;
 }

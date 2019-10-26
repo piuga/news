@@ -219,4 +219,15 @@
             </settings>
         </field>
     </fieldset>
+    <fieldset name="assign_products" sortOrder="40">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">News in Category</label>
+        </settings>
+        <container name="assign_news_container" sortOrder="10">
+            <htmlContent name="html_content">
+                <block name="news" class="Piuga\News\Block\Adminhtml\Category\AssignNews"/>
+            </htmlContent>
+        </container>
+    </fieldset>
 </form>
