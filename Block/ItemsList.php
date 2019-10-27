@@ -8,6 +8,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Theme\Block\Html\Pager;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
+use Piuga\News\Api\Data\CategoryInterface;
 use Piuga\News\Api\Data\NewsInterface;
 use Piuga\News\Helper\NewsItem;
 use Piuga\News\Model\ResourceModel\News\Collection;
@@ -58,7 +59,8 @@ class ItemsList extends Template
     /**
      * Get news items collection
      *
-     * @return Collection
+     * @return null
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getNewsItems() {
@@ -72,8 +74,20 @@ class ItemsList extends Template
             $news = $this->newsCollectionFactory->create()
                 ->addFieldToFilter('status', ['eq' => 1])
                 ->addFieldToFilter('publish_at', ['lteq' => date('Y-m-d H:i:s')])
-                ->addFieldToFilter('stores', ['in' => $stores])
-                ->setOrder($this->newsHelper->getSortBy(), $this->newsHelper->getSortByDirection());
+                ->addFieldToFilter('stores', ['in' => $stores]);
+            $sortingField = $this->newsHelper->getSortBy();
+            // Add category filter
+            if ($this->getCurrentCategory()) {
+                $news->getSelect()->joinLeft(
+                    'piuga_news_categories_items',
+                    'news_id = main_table.id',
+                    ['category_id', 'position']
+                ); // Add position and categories to collection
+                $news->addFieldToFilter('category_id', ['eq' => (int)$this->getCurrentCategory()->getId()]);
+            } elseif ($sortingField === 'position') {
+                $sortingField = 'id';
+            }
+            $news->setOrder($sortingField, $this->newsHelper->getSortByDirection());
         }
 
         return $news;
@@ -120,10 +134,11 @@ class ItemsList extends Template
      *
      * @param NewsInterface $news
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getItemUrl(NewsInterface $news) : string
     {
-        return $this->newsHelper->getItemUrl($news);
+        return $this->newsHelper->getItemUrl($news, $this->getCurrentCategory());
     }
 
     /**
@@ -146,5 +161,16 @@ class ItemsList extends Template
     public function getDescription() : string
     {
         return $this->newsHelper->getListDescription();
+    }
+
+    /**
+     * Get current category
+     *
+     * @return CategoryInterface|null
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCurrentCategory() : ?CategoryInterface
+    {
+        return $this->newsHelper->getNewsCategory();
     }
 }

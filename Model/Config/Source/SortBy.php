@@ -20,6 +20,7 @@ class SortBy implements OptionSourceInterface
         return [
             ['value' => NewsInterface::AUTHOR, 'label' => __('Author')],
             ['value' => NewsInterface::CREATED_AT, 'label' => __('Created At')],
+            ['value' => 'position', 'label' => __('Position')],
             ['value' => NewsInterface::PUBLISH_AT, 'label' => __('Publish At')],
             ['value' => NewsInterface::TITLE, 'label' => __('Title')],
             ['value' => NewsInterface::UPDATED_AT, 'label' => __('Updated At')],

@@ -1,5 +1,5 @@
 <?php /** @var \Piuga\News\Block\ItemsList $block */ ?>
-<?php if ($description = $block->getDescription()): ?>
+<?php if (($description = $block->getDescription()) && !$block->getCurrentCategory()): ?>
     <div class="block description">
         <?= $description ?>
     </div>

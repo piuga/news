@@ -254,7 +254,7 @@ class NewsItem extends AbstractHelper
             ->getBlockFilter()
             ->filter(
                 (string)$this->scopeConfig->getValue(
-                    self::CONFIG_PATH_META_DESCRIPTION,
+                    self::CONFIG_PATH_DESCRIPTION,
                     ScopeInterface::SCOPE_STORE
                 )
             );
