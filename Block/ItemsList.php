@@ -59,7 +59,7 @@ class ItemsList extends Template
     /**
      * Get news items collection
      *
-     * @return null
+     * @return Collection
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
