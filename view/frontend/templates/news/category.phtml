@@ -5,10 +5,10 @@ $viewModel = $block->getViewModel();
 $category = $viewModel->getNewsCategory();
 ?>
 <div class="category-view">
-    <div class="no-display"><?php echo $category->getTitle() ?></div>
+    <div class="no-display"><?= $category->getTitle() ?></div>
     <?php if ($category->getContent()): ?>
         <div class="category-description">
-            <?php echo $category->getContent(); ?>
+            <?= $category->getContent(); ?>
         </div>
     <?php endif; ?>
 </div>
