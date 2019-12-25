@@ -1,0 +1,46 @@
+<?php
+/**
+ * @var $block \Piuga\News\Block\Widget\News
+ */
+$itemsCollection = $block->getNewsCollection();
+
+if ($itemsCollection->getSize() > 0) : ?>
+    <div class="latest-news-widget">
+        <?php if ($block->getTitle()): ?>
+            <div class="title">
+                <h3><?= $block->getTitle(); ?></h3>
+            </div>
+        <?php endif; ?>
+        <div class="news-items">
+            <ul>
+                <?php foreach ($itemsCollection as $item) : ?>
+                    <li itemscope itemtype="http://schema.org/Article">
+                        <div class="item-content">
+                            <a class="item-title" href="<?= $block->getItemUrl($item); ?>">
+                                <h4 itemprop="name"><?= $item->getTitle() ?></h4>
+                            </a>
+                            <div class="author-date">
+                                <span class="author">
+                                    <?= __('by'); ?>
+                                    <span itemprop="author"><?= $item->getAuthor(); ?></span>
+                                </span>
+                                <span class="date"><?= __('published at'); ?>
+                                    <span itemprop="datePublished"><?= $block->getPublishDate($item); ?></span>
+                                </span>
+                            </div>
+                        </div>
+                        <?php if ($block->canShowImage() && ($image = $item->getImageUrl())): ?>
+                            <div class="item-image">
+                                <a class="item-image" href="<?= $this->getItemUrl($item); ?>">
+                                    <span itemprop="thumbnailUrl">
+                                        <img src="<?= $image ?>" alt="<?= $item->getTitle() ?>" title="<?= $item->getTitle() ?>" />
+                                    </span>
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+<?php endif;
