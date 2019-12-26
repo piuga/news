@@ -11,7 +11,9 @@ if (count($categories)): ?>
         <ul class="category-menu">
             <?php foreach ($categories as $category): ?>
                 <li>
-                    <a href="<?= $viewModel->getCategoryLink($category); ?>"><?= $category->getTitle(); ?></a>
+                    <a href="<?= $viewModel->getCategoryLink($category); ?>">
+                        <?= $block->escapeHtml($category->getTitle()); ?>
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>

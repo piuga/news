@@ -5,7 +5,7 @@ $viewModel = $block->getViewModel();
 $category = $viewModel->getNewsCategory();
 ?>
 <div class="category-view">
-    <div class="no-display"><?= $category->getTitle() ?></div>
+    <div class="no-display"><?= $block->escapeHtml($category->getTitle()) ?></div>
     <?php if ($category->getContent()): ?>
         <div class="category-description">
             <?= $category->getContent(); ?>

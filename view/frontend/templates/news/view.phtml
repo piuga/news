@@ -5,11 +5,15 @@ $viewModel = $block->getViewModel();
 $news = $viewModel->getNewsItem();
 ?>
 <div class="news-view" itemscope itemtype="http://schema.org/Article">
-    <div class="no-display" itemprop="name"><?= $news->getTitle() ?></div>
+    <div class="no-display" itemprop="name"><?= $block->escapeHtml($news->getTitle()) ?></div>
     <?php if ($news->getImage()): ?>
         <div class="news-image">
             <span itemprop="image">
-                <img src="<?= $news->getImageUrl() ?>" alt="<?= $news->getTitle() ?>" title="<?= $news->getTitle() ?>"/>
+                <img
+                    src="<?= $news->getImageUrl() ?>"
+                    alt="<?= $block->escapeHtml($news->getTitle()) ?>"
+                    title="<?= $block->escapeHtml($news->getTitle()) ?>"
+                />
             </span>
         </div>
     <?php endif; ?>
@@ -24,11 +28,11 @@ $news = $viewModel->getNewsItem();
     <div class="author-date">
         <span class="author">
             <?= __('by') ?>
-            <span itemprop="author"><?= $news->getAuthor() ?></span>
+            <span itemprop="author"><?= $block->escapeHtml($news->getAuthor()) ?></span>
         </span>
         <span class="date">
             <?= __('published at') ?>
-            <span itemprop="datePublished"><?= $viewModel->getPublishDate($news) ?></span>
+            <span itemprop="datePublished"><?= $block->escapeHtml($viewModel->getPublishDate($news)) ?></span>
         </span>
     </div>
 </div>
