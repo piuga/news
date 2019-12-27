@@ -161,6 +161,11 @@ class Router implements RouterInterface
             return null;
         }
 
+        // Stop if module is disabled
+        if (!$this->newsHelper->isActive()) {
+            return null;
+        }
+
         $identifierParts = explode('/', $identifier);
 
         /** Check if URL is for a news page (list or detail) */

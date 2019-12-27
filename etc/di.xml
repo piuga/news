@@ -7,6 +7,13 @@
     <preference for="Piuga\News\Api\Data\CategoryInterface" type="Piuga\News\Model\Category"/>
     <preference for="Piuga\News\Api\Data\CategorySearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
 
+    <type name="Piuga\News\Model\News">
+        <arguments>
+            <argument name="resource" xsi:type="object">Piuga\News\Model\ResourceModel\News</argument>
+            <argument name="resourceCollection" xsi:type="object">Piuga\News\Model\ResourceModel\News\Collection</argument>
+        </arguments>
+    </type>
+
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">

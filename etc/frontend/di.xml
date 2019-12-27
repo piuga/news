@@ -11,4 +11,17 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Framework\View\Page\Config">
+        <plugin name="news_category_meta_title" type="Piuga\News\Plugin\View\Page\Config\CategoryMetaTitle" sortOrder="10" />
+    </type>
+    <type name="Piuga\News\Api\Data\NewsInterface">
+        <plugin name="news_filter_content" type="Piuga\News\Plugin\NewsInterface\FilterContent" sortOrder="10" />
+    </type>
+    <type name="Piuga\News\Api\Data\CategoryInterface">
+        <plugin name="category_filter_content" type="Piuga\News\Plugin\CategoryInterface\FilterContent" sortOrder="10" />
+    </type>
+    <type name="Piuga\News\Block\Widget\News">
+        <plugin name="news_widget_rendering" type="Piuga\News\Plugin\Widget\NewsRendering" sortOrder="10" />
+    </type>
 </config>
