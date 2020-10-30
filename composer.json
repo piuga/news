@@ -1,20 +1,14 @@
 {
-  "name": "piuga/news",
-  "description": "Magento 2 News module",
-  "require":
-  {
-    "magento/framework": "102.*.*",
-    "magento/module-ui": "101.*.*",
-    "magento/module-widget": "101.*.*"
-  },
-  "type": "magento2-module",
-  "version": "1.0.0",
-  "autoload":
-  {
-    "files": [ "registration.php" ],
-    "psr-4":
-    {
-      "Piuga\\News\\": ""
+    "name": "piuga/module-news",
+    "description": "Magento 2 News module",
+    "type": "magento2-module",
+    "version": "100.0.0",
+    "autoload": {
+        "psr-4": {
+            "Piuga\\News\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
     }
-  }
 }
