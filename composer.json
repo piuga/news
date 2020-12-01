@@ -2,6 +2,9 @@
     "name": "piuga/module-news",
     "description": "Magento 2 News module",
     "type": "magento2-module",
+    "require": {
+        "php": "^7.4"
+    },
     "version": "100.0.0",
     "autoload": {
         "psr-4": {
